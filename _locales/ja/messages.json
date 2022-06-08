@@ -1,0 +1,4 @@
+{
+    "detected": {"message": "検出されました"},
+    "notdetected": {"message": "検出されませんでした"}
+}

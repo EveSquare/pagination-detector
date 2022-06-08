@@ -1,0 +1,4 @@
+{
+    "detected": {"message": "detected"},
+    "notdetected": {"message": "notdetected"}
+}
