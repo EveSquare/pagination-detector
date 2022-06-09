@@ -1,15 +1,19 @@
 {
-  "name": "Pagination Detector",
-  "description": "Detects pagination and allows arrow movement with the keyboard.",
+  "name": "__MSG_name__",
+  "short_name": "__MSG_short_name__",
+  "description": "__MSG_description__",
+  "author": "__MSG_author__",
   "version": "1.0",
   "manifest_version": 3,
   "default_locale": "en",
-  "author": "EveSquare",
-  "permissions": ["storage", "scripting"],
+  "permissions": ["tabs"],
   "content_scripts": [
     {
-      "run_at":"document_end",
-      "matches": ["<all_urls>"],
+      "run_at":"document_idle",
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
       "js": ["lib/jquery-3.6.0.min.js","src/content-scripts.js"]
     }
   ],
