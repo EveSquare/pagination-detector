@@ -1,0 +1,91 @@
+:root {
+    --pd-background: #fefcfa;
+    --pd-background-dark: #272826;
+    --pd-text: #7b98ff;
+    --pd-text-dark: #f6fbff;
+    --pd-primary: #0a37bf;
+    --pd-primary-dark: #a6aab9;
+    --pd-secondary: #d9d9d9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Monaco, Courier, Serif;
+    min-width: 25rem;
+    min-height: 18rem;
+    background: var(--pd-background);
+    padding: 1.5rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    color: var(--pd-primary);
+}
+
+.main {
+    color: var(--pd-text);
+    text-align: center;
+}
+
+.main code {
+    margin-right: 5px;
+}
+
+code {
+    background: var(--pd-secondary);
+    border-radius: 4px;
+    padding: 2px 3px;
+}
+
+.report-card {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-card a {
+    color: var(--pd-primary);
+    text-decoration: none;
+}
+
+.report-card__box {
+    background: var(--pd-secondary);
+    width: 140px;
+    transform: skew(-0.05turn);
+    box-shadow: 5px 5px 2px 1px var(--pd-primary);
+    padding: 12px 25px;
+}
+
+#form-link {
+    margin-top: 15px;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: var(--pd-background-dark);
+    }
+
+    .main {
+        color: var(--pd-text-dark);
+    }
+
+    .title {
+        color: var(--pd-primary-dark);
+    }
+
+    code {
+        color: var(--pd-background-dark);
+    }
+}
