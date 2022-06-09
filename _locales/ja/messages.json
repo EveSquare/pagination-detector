@@ -1,4 +1,16 @@
 {
+    "name": {"message": "ページネーション　矢印移動"},
+    "short_name": {
+        "message": "ページネーション",
+        "description": "ページネーションをキーボード移動で遷移可能にします"
+    },
+    "description": {"message": "ページネーションを検出し、キーボードによる矢印の移動を可能にします。"},
+    "author": {"message": "EveSquare"},
+    "status": {"message": "状態"},
     "detected": {"message": "検出されました"},
-    "notdetected": {"message": "検出されませんでした"}
+    "notdetected": {"message": "検出されませんでした"},
+    "report": {"message": "検出されませんでしたか？改善のための報告をお願いします"},
+    "do_report": {"message": "報告する"},
+    "form_url": {"message": "https://docs.google.com/forms/d/e/1FAIpQLSfaD1mZwe8D0ZyyUPuJwCIwcGtbVsK5RLV5GOG6j52W5UDXkg/viewform?usp=pp_url&entry.1473667408="},
+    "navigate": {"message": "<code>←</code><code>→</code>で移動できます"}
 }
