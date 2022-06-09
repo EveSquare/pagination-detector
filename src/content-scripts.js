@@ -1,8 +1,9 @@
 var previousURL = null;
 var nextURL = null;
-var page = {
+const page = {
+    lang: "",
+    excludeSearchURL: `${location.origin}${location.pathname}?`,
     search: new URLSearchParams(location.search),
-    queryString: null,
 }
 
 const tryDetectPagination = () => {
@@ -11,21 +12,28 @@ const tryDetectPagination = () => {
         document.querySelector(".index-navigator"),
         document.querySelector(".PageNavi"),
     ];
-    for(let dom of paginationDOMs){
-        console.log(dom);
-        if(dom) return dom;
+    for (let dom of paginationDOMs){
+        if (dom) return dom;
     }
     return null;
 }
 
 const tryDetectQueryStringPaginationPattern = (paginationTags) => {
     const detectPatterns = ["p", "page"];
-    for(let atag of paginationTags) {
-        const searchParam = new URLSearchParams(atag.search);
-        for(let pattern of detectPatterns) {
-            console.log(searchParam.get(pattern));
-            if(searchParam.get(pattern) != null) return pattern;
+    const searchPattern = (urlSearch) => {
+        const searchParam = new URLSearchParams(urlSearch);
+        for (let pattern of detectPatterns) {
+            if (searchParam.get(pattern) != null) return pattern;
         }
+    }
+    if (paginationTags) {
+        for (let atag of paginationTags) {
+            const queryStringPaginationPattern = searchPattern(atag.search);
+            if (queryStringPaginationPattern) return queryStringPaginationPattern;
+        }
+    } else {
+        const queryStringPaginationPattern = searchPattern(location.search);
+        if (queryStringPaginationPattern) return queryStringPaginationPattern;
     }
     return null;
 }
@@ -34,41 +42,46 @@ const tryDetectURLPaginationPattern = () => {
 
 }
 
+const attachDetectQueryStringPaginationPattern = (queryString) => {
+    const searchParam = new URLSearchParams(location.search);
+    const pageNum = searchParam.get(queryString);
+    if (pageNum === null || pageNum == "0" || pageNum == "1") {
+        page.search.set(queryString, 2);
+        previousURL = null;
+        nextURL =　page.excludeSearchURL + page.search.toString();
+    } else {
+        page.search.set(queryString, Number(pageNum) - 1);
+        previousURL = page.excludeSearchURL + page.search.toString();
+        page.search.set(queryString, Number(pageNum) + 1)
+        nextURL = page.excludeSearchURL + page.search.toString();
+    }
+}
+
 const main = () => {
     const paginationDOM = tryDetectPagination();
-    if(paginationDOM === null) return;
-
-    const paginationTags = paginationDOM.getElementsByTagName("a");
-    console.log(paginationTags);
-    page.queryString = tryDetectQueryStringPaginationPattern(paginationTags);
-    if(page.queryString === null) return;
-
-    const searchParam = new URLSearchParams(location.search);
-    const pageNum = searchParam.get(page.queryString);
-    if (pageNum === null || pageNum == "0" || pageNum == "1") {
-        page.search.set(page.queryString, 2);
-        previousURL = null;
-        nextURL = page.search.toString();
-    } else {
-        page.search.set(page.queryString, Number(pageNum) - 1);
-        previousURL = page.search.toString();
-        page.search.set(page.queryString, Number(pageNum) + 1)
-        nextURL = page.search.toString();
+    let queryString = tryDetectQueryStringPaginationPattern();
+    if (paginationDOM === null && queryString === null) return;
+    
+    if (paginationDOM) {
+        const paginationTags = paginationDOM.getElementsByTagName("a");
+        queryString = tryDetectQueryStringPaginationPattern(paginationTags);
     }
+    if (queryString === null) return;
 
-    console.log(encodeURIComponent(previousURL), encodeURIComponent(nextURL));
+    attachDetectQueryStringPaginationPattern(queryString);
+
     if (previousURL || nextURL) {
-        chrome.runtime.sendMessage({setIcon: "detected"}, res => console.log(res.status));
+        chrome.runtime.sendMessage({setIcon: "detected"}, res => {});
+        return true;
     } else {
-        chrome.runtime.sendMessage({setIcon: "notdetected"}, res => console.log(res.status));
+        chrome.runtime.sendMessage({setIcon: "notdetected"}, res => {});
     }
 }
 main();
 
 const movePage = (url) => {
     if (url === null && !url) return;
-    const transitionURL = `${location.origin}${location.pathname}?` + url;
-    location.href = transitionURL;
+    location.href = url;
 }
 
 document.addEventListener("keydown", event => {
@@ -77,4 +90,16 @@ document.addEventListener("keydown", event => {
     } else if (event.key == "ArrowRight") {
         movePage(nextURL);
     }
-})
+});
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if(request.popup === "getIsDetected") {
+            if (previousURL || nextURL) {
+                sendResponse(true);
+            } else {
+                sendResponse(false);
+            }
+        }
+    }
+);
