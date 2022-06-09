@@ -1,4 +1,16 @@
 {
+    "name": {"message": "Pagination Arrow Move"},
+    "short_name": {
+        "message": "Pagination",
+        "description": "Pagination Arrow Move"
+    },
+    "description": {"message": "Detects pagination and allows arrow movement with the keyboard."},
+    "author": {"message": "EveSquare"},
+    "status": {"message": "status"},
     "detected": {"message": "detected"},
-    "notdetected": {"message": "notdetected"}
+    "notdetected": {"message": "notdetected"},
+    "report": {"message": "Not detected? Please report for improvement."},
+    "do_report": {"message": "Report"},
+    "form_url": {"message": "https://docs.google.com/forms/d/e/1FAIpQLSf010VW9SZuUgU3lgZxWHhmn5cuEhQTrTpCEdHo6916ZFStiA/viewform?usp=pp_url&entry.785664495="},
+    "navigate": {"message": "You can navigate by using <code>←</code><code>→</code>"}
 }
