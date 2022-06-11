@@ -45,4 +45,4 @@ const createPopup = () => {
     )
   });
 }
-document.addEventListener("DOMContentLoaded", createPopup());
+document.addEventListener("DOMContentLoaded", createPopup);
