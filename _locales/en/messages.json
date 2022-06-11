@@ -8,9 +8,16 @@
     "author": {"message": "EveSquare"},
     "status": {"message": "status"},
     "detected": {"message": "detected"},
+    "detect_alert": {"message": "Pagination detected 🐸"},
     "notdetected": {"message": "notdetected"},
     "report": {"message": "Not detected? Please report for improvement."},
     "do_report": {"message": "Report"},
     "form_url": {"message": "https://docs.google.com/forms/d/e/1FAIpQLSf010VW9SZuUgU3lgZxWHhmn5cuEhQTrTpCEdHo6916ZFStiA/viewform?usp=pp_url&entry.785664495="},
-    "navigate": {"message": "You can navigate by using <code>←</code><code>→</code>"}
+    "navigate": {"message": "You can navigate by using <code>←</code><code>→</code>"},
+    "options_form_1": {"message": "Display of detection alerts"},
+    "options_form_1_selection_1": {"message": "Display"},
+    "options_form_1_selection_2": {"message": "Do not display"},
+    "save": {"message": "Save"},
+    "saved": {"message": "保存しました 💾"},
+    "license": {"message": "created by <a href='https://github.com/EveSquare'>EveSquare</a> It is licensed under the MIT License."}
 }

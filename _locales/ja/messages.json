@@ -8,9 +8,16 @@
     "author": {"message": "EveSquare"},
     "status": {"message": "状態"},
     "detected": {"message": "検出されました"},
+    "detect_alert": {"message": "ページネーションが検出されました 🦀"},
     "notdetected": {"message": "検出されませんでした"},
     "report": {"message": "検出されませんでしたか？改善のための報告をお願いします"},
     "do_report": {"message": "報告する"},
     "form_url": {"message": "https://docs.google.com/forms/d/e/1FAIpQLSfaD1mZwe8D0ZyyUPuJwCIwcGtbVsK5RLV5GOG6j52W5UDXkg/viewform?usp=pp_url&entry.1473667408="},
-    "navigate": {"message": "<code>←</code><code>→</code>で移動できます"}
+    "navigate": {"message": "<code>←</code><code>→</code>で移動できます"},
+    "options_form_1": {"message": "検出アラートの表示"},
+    "options_form_1_selection_1": {"message": "表示する"},
+    "options_form_1_selection_2": {"message": "表示しない"},
+    "save": {"message": "保存する"},
+    "saved": {"message": "保存しました 💾"},
+    "license": {"message": "は<a href='https://github.com/EveSquare'>EveSquare</a>によって作成されました。MITライセンスで提供されています。"}
 }
