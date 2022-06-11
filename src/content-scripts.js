@@ -11,6 +11,7 @@ const tryDetectPagination = () => {
         document.querySelector(".pagination"),
         document.querySelector(".index-navigator"),
         document.querySelector(".PageNavi"),
+        document.querySelector(".s-pagination-strip"),
     ];
     for (let dom of paginationDOMs){
         if (dom) return dom;
@@ -19,6 +20,11 @@ const tryDetectPagination = () => {
 }
 
 const tryDetectQueryStringPaginationPattern = (paginationTags) => {
+    /* 
+        If there are paginationTags, 
+        it tries to detect them based on the information in the tags. 
+        If not, it refers to the current URL.
+    */
     const detectPatterns = ["p", "page"];
     const searchPattern = (urlSearch) => {
         const searchParam = new URLSearchParams(urlSearch);
@@ -39,7 +45,7 @@ const tryDetectQueryStringPaginationPattern = (paginationTags) => {
 }
 
 const tryDetectURLPaginationPattern = () => {
-
+    // To be addressed in the future
 }
 
 const attachDetectQueryStringPaginationPattern = (queryString) => {
@@ -57,6 +63,47 @@ const attachDetectQueryStringPaginationPattern = (queryString) => {
     }
 }
 
+const movePage = (url) => {
+    if (url === null && !url) return;
+    location.href = url;
+}
+
+const keydownEventHandler = (event) => {
+    if (event.key == "ArrowLeft"){
+        movePage(previousURL);
+    } else if (event.key == "ArrowRight") {
+        movePage(nextURL);
+    }
+}
+
+const runtimeOnMessagehandler = (request, sender, sendResponse) => {
+    if(request.popup === "getIsDetected") {
+        if (previousURL || nextURL) {
+            sendResponse(true);
+        } else {
+            sendResponse(false);
+        }
+    }
+}
+
+const paginationDetectHandler = (response) => {
+    chrome.storage.sync.get(["enabledDetectAlert"], data => {
+        if (!data.enabledDetectAlert) return;
+        const detectAlert = document.getElementById("alert");
+        detectAlert.className = "show";
+        setTimeout(() => {
+            detectAlert.className = detectAlert.className.replace("show", "");
+        }, 3000);
+    });
+}
+
+const init = () => {
+    const snackBar = document.createElement('div');
+    snackBar.setAttribute("id", "alert");
+    snackBar.textContent = chrome.i18n.getMessage("detect_alert");
+    document.body.appendChild(snackBar);
+}
+
 const main = () => {
     const paginationDOM = tryDetectPagination();
     let queryString = tryDetectQueryStringPaginationPattern();
@@ -71,35 +118,14 @@ const main = () => {
     attachDetectQueryStringPaginationPattern(queryString);
 
     if (previousURL || nextURL) {
-        chrome.runtime.sendMessage({setIcon: "detected"}, res => {});
+        chrome.runtime.sendMessage({setIcon: "detected"}, paginationDetectHandler);
         return true;
     } else {
         chrome.runtime.sendMessage({setIcon: "notdetected"}, res => {});
     }
 }
+init();
 main();
 
-const movePage = (url) => {
-    if (url === null && !url) return;
-    location.href = url;
-}
-
-document.addEventListener("keydown", event => {
-    if (event.key == "ArrowLeft"){
-        movePage(previousURL);
-    } else if (event.key == "ArrowRight") {
-        movePage(nextURL);
-    }
-});
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if(request.popup === "getIsDetected") {
-            if (previousURL || nextURL) {
-                sendResponse(true);
-            } else {
-                sendResponse(false);
-            }
-        }
-    }
-);
+document.addEventListener("keydown",keydownEventHandler);
+chrome.runtime.onMessage.addListener(runtimeOnMessagehandler);
