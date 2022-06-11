@@ -1,46 +1,70 @@
-let page = document.getElementById("buttonDiv");
-let selectedClassName = "current";
-const presetButtonColors = ["#3aa757", "#e8453c", "#f9bb2d", "#4688f1"];
+const createOptions = () => {
+  const name = chrome.i18n.getMessage("name");
+  const optionsTemplate = `
+    <header>
+      <br>
+      <img src="../../images/logo-white.svg" alt="logo" width="50px">
+      <h3>${name}</h3>
+    </header>
+    <main>
+      <form id="mainForm" name="mainForm">
+        <p>
+          <aside>
+            <img 
+              src="../../images/detect_alert_image.png"
+              alt="image"
+            >
+          </aside>
+          <label>${chrome.i18n.getMessage("options_form_1")}</label>
+          <br>
+          <label>
+            <input type="radio" name="enabledDetectAlert" value="enabled">
+            ${chrome.i18n.getMessage("options_form_1_selection_1")}
+          </label>
+          <br>
+          <label>
+            <input type="radio" name="enabledDetectAlert" value="disabled">
+            ${chrome.i18n.getMessage("options_form_1_selection_2")}
+          </label>
+        </p>
+        <p>
+          <button type="submit">${chrome.i18n.getMessage("save")}</button>
+        </p>
+      </form>
+    </main>
+    <footer>
+      <p>
+        "${name}"${chrome.i18n.getMessage("license")}
+      </p>
+    </footer>
+    <div id="alert">${chrome.i18n.getMessage("saved")}</div>
+  `;
+  document.body.innerHTML = optionsTemplate;
+  document.title = name;
 
-// Reacts to a button click by marking the selected button and saving
-// the selection
-function handleButtonClick(event) {
-  // Remove styling from the previously selected color
-  let current = event.target.parentElement.querySelector(
-    `.${selectedClassName}`
-  );
-  if (current && current !== event.target) {
-    current.classList.remove(selectedClassName);
+  chrome.storage.sync.get(["enabledDetectAlert"], data => {
+    const form = document.mainForm.enabledDetectAlert;
+    const defaultNode = data.enabledDetectAlert ? 0 : 1;
+    form[defaultNode].checked = true;
+  });
+
+  const savedAlert = () => {
+    const savedAlert = document.getElementById("alert");
+    savedAlert.className = "show";
+    setTimeout(() => {
+        savedAlert.className = savedAlert.className.replace("show", "");
+    }, 3000);
   }
 
-  // Mark the button as selected
-  let color = event.target.dataset.color;
-  event.target.classList.add(selectedClassName);
-  chrome.storage.sync.set({ color });
+  const formOnSubmitEventHandler = (event) => {
+    event.preventDefault();
+    const enabledDetectAlertData = event.target.enabledDetectAlert;
+    const result = enabledDetectAlertData.value == "enabled" ? true : false;
+    chrome.storage.sync.set({enabledDetectAlert: result});
+    savedAlert();
+  }
+  const form = document.mainForm;
+  form.addEventListener("submit", formOnSubmitEventHandler);
 }
 
-// Add a button to the page for each supplied color
-function constructOptions(buttonColors) {
-  chrome.storage.sync.get("color", (data) => {
-    let currentColor = data.color;
-    // For each color we were provided…
-    for (let buttonColor of buttonColors) {
-      // …create a button with that color…
-      let button = document.createElement("button");
-      button.dataset.color = buttonColor;
-      button.style.backgroundColor = buttonColor;
-
-      // …mark the currently selected color…
-      if (buttonColor === currentColor) {
-        button.classList.add(selectedClassName);
-      }
-
-      // …and register a listener for when that button is clicked
-      button.addEventListener("click", handleButtonClick);
-      page.appendChild(button);
-    }
-  });
-}
-
-// Initialize the page by constructing the color options
-constructOptions(presetButtonColors);
+document.addEventListener("DOMContentLoaded", createOptions);
