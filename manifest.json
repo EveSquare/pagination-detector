@@ -6,7 +6,7 @@
   "version": "1.0",
   "manifest_version": 3,
   "default_locale": "en",
-  "permissions": ["tabs"],
+  "permissions": ["storage", "tabs"],
   "content_scripts": [
     {
       "run_at":"document_idle",
@@ -14,7 +14,8 @@
         "http://*/*",
         "https://*/*"
       ],
-      "js": ["lib/jquery-3.6.0.min.js","src/content-scripts.js"]
+      "js": ["src/content-scripts.js"],
+      "css": ["src/snackBar.css"]
     }
   ],
   "background": {
@@ -29,5 +30,11 @@
     "48": "/images/default/icon_48.png",
     "128": "/images/default/icon_128.png"
   },
-  "options_page": "src/options/index.html"
+  "options_page": "src/options/index.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["src/snackBar.css"],
+      "use_dynamic_url": true
+    }
+  ]
 }
