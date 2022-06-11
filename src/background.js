@@ -22,20 +22,26 @@ const setDefaultIcon = (sender) => {
     });
 }
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        if(request.setIcon === "detected"){
-            setDetectedIcon(sender);
-            sendResponse({status: "ok"});
-            return;
-        }
-
-        if (request.setIcon === "notdetected") {
-            setDefaultIcon(sender);
-            sendResponse({status: "ok"});
-            return;
-        }
-
-        sendResponse({status: "this event not registered"});
+const scriptsRuntimeOnMessageHandler = (request, sender, sendResponse) => {
+    if(request.setIcon === "detected"){
+        setDetectedIcon(sender);
+        sendResponse({status: "ok"});
+        return;
     }
-);
+    
+    if (request.setIcon === "notdetected") {
+        setDefaultIcon(sender);
+        sendResponse({status: "ok"});
+        return;
+    }
+    
+    sendResponse({status: "this event not registered"});
+}
+
+const onInstalledHandler = () => {
+    const enabledDetectAlert = false;
+    chrome.storage.sync.set({enabledDetectAlert: enabledDetectAlert});
+}
+
+chrome.runtime.onInstalled.addListener(onInstalledHandler);
+chrome.runtime.onMessage.addListener(scriptsRuntimeOnMessageHandler);
